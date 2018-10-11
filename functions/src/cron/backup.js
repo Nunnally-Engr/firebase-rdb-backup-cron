@@ -3,7 +3,6 @@ const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
 
 // [GCP]ストレージ設定
-const gcs = require('@google-cloud/storage')
 const storage = admin.storage()
 
 // 日付関連
@@ -21,12 +20,11 @@ exports.backup = () => {
   const ref = database.ref()
 
   // ファイル名生成用
-  const dirname = 'Backup/' + moment().format('YYYY_MM_DD')
   const filename = moment().format('YYYY_MM_DD_HH:mm:ss') + '.json'
 
   // [GCP]バケット設定
   const bucket = storage.bucket()
-  const file = bucket.file(dirname + '/' + filename)
+  const file = bucket.file('backup/' + filename)
   const stream = file.createWriteStream({
     gzip: true
   })

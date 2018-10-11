@@ -1,17 +1,16 @@
 const functions = require('firebase-functions')
-const admin = require('firebase-admin')
 
-const utils = require('./src/database/utils')
+const backup = require('./src/cron/backup')
 
-// データバック・アップ： 1時間に1回
-exports.hourly_job = functions.pubsub
-  .topic('hourly-tick')
+// データバック・アップ
+exports.dataBackupAll = functions.pubsub
+  .topic('data-backup-all')
   .onPublish((message) => {
 
-    console.log("This job is run every hour!")
+    console.log("This job is run !")
 
     // バック・アップ
-    utils.backup()
+    backup.backup()
 
     if (message.data) {
       const dataString = Buffer.from(message.data, 'base64').toString()
